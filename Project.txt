@@ -1,0 +1,131 @@
+## 1. Create Tables
+
+CREATE TABLE Events (
+    EventID INT PRIMARY KEY,
+    EventName VARCHAR(100),
+    EventType VARCHAR(50),
+    EventDate DATE,
+    VenueID INT,
+    IsAvailable BOOLEAN
+);
+
+CREATE TABLE Participants (
+    ParticipantID INT PRIMARY KEY,
+    FirstName VARCHAR(50),
+    LastName VARCHAR(50),
+    Email VARCHAR(100)
+);
+
+CREATE TABLE Venues (
+    VenueID INT PRIMARY KEY,
+    VenueName VARCHAR(100),
+    Location VARCHAR(100),
+    Capacity INT
+);
+
+CREATE TABLE Registrations (
+    RegistrationID INT PRIMARY KEY,
+    EventID INT,
+    ParticipantID INT,
+    RegistrationDate DATE,
+    FOREIGN KEY (EventID) REFERENCES Events(EventID),
+    FOREIGN KEY (ParticipantID) REFERENCES Participants(ParticipantID)
+);
+
+CREATE TABLE Payments (
+    PaymentID INT PRIMARY KEY,
+    RegistrationID INT,
+    Amount DECIMAL(10, 2),
+    PaymentDate DATE,
+    FOREIGN KEY (RegistrationID) REFERENCES Registrations(RegistrationID)
+);
+
+## 2. Insert Data for Events, Participants, and Venues
+
+-- Insert data into Events
+INSERT INTO Events (EventID, EventName, EventType, EventDate, VenueID, IsAvailable)
+VALUES
+(1, 'Tech Conference 2024', 'Conference', '2024-10-15', 1, TRUE),
+(2, 'Music Festival', 'Festival', '2024-11-20', 2, TRUE);
+
+-- Insert data into Participants
+INSERT INTO Participants (ParticipantID, FirstName, LastName, Email)
+VALUES
+(1, 'John', 'Doe', 'john.doe@example.com'),
+(2, 'Jane', 'Smith', 'jane.smith@example.com');
+
+-- Insert data into Venues
+INSERT INTO Venues (VenueID, VenueName, Location, Capacity)
+VALUES
+(1, 'Conference Hall A', 'New York', 500),
+(2, 'Open Grounds', 'Los Angeles', 2000);
+
+## 3. Select All Participants Registered for a Specific Event
+
+SELECT p.ParticipantID, p.FirstName, p.LastName, p.Email
+FROM Participants p
+JOIN Registrations r ON p.ParticipantID = r.ParticipantID
+WHERE r.EventID = 1;  -- Replace '1' with the specific EventID you want to query
+
+## 4. Update Event Details or Venue After Confirmation
+
+-- Update event details
+UPDATE Events
+SET EventName = 'Updated Tech Conference 2024', EventDate = '2024-10-18'
+WHERE EventID = 1;
+
+-- Update venue details
+UPDATE Venues
+SET VenueName = 'Conference Hall B', Location = 'San Francisco'
+WHERE VenueID = 1;
+
+## 5. Delete Participant Registrations for Canceled Events
+
+DELETE FROM Registrations
+WHERE EventID = 2;  -- Replace '2' with the specific EventID of the canceled event
+
+## 6. Filter Events by Date or Venue
+
+-- Filter by date
+SELECT * FROM Events
+WHERE EventDate = '2024-10-15';
+
+-- Filter by venue
+SELECT * FROM Events
+WHERE VenueID = 1;
+
+## 7. Use AND/OR to Find Events by Type and Availability
+
+SELECT * FROM Events
+WHERE EventType = 'Conference' AND IsAvailable = TRUE;
+
+SELECT * FROM Events
+WHERE EventType = 'Festival' OR IsAvailable = TRUE;
+
+## 8. Sort Events by Date or Number of Participants
+
+-- Sort by event date
+SELECT * FROM Events
+ORDER BY EventDate;
+
+-- Sort by number of participants
+SELECT e.EventID, e.EventName, COUNT(r.ParticipantID) AS NumberOfParticipants
+FROM Events e
+LEFT JOIN Registrations r ON e.EventID = r.EventID
+GROUP BY e.EventID, e.EventName
+ORDER BY NumberOfParticipants DESC;
+
+## 9. Count the Total Number of Participants for Each Event
+
+SELECT e.EventID, e.EventName, COUNT(r.ParticipantID) AS TotalParticipants
+FROM Events e
+LEFT JOIN Registrations r ON e.EventID = r.EventID
+GROUP BY e.EventID, e.EventName;
+
+## 10. Group Registrations by Event and Calculate Total Revenue per Event
+
+SELECT e.EventID, e.EventName, SUM(p.Amount) AS TotalRevenue
+FROM Events e
+JOIN Registrations r ON e.EventID = r.EventID
+JOIN Payments p ON r.RegistrationID = p.RegistrationID
+GROUP BY e.EventID, e.EventName;

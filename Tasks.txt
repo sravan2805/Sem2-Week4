@@ -1,0 +1,158 @@
+1. Creating a Table
+    -- Task 1:
+        CREATE TABLE Employees (
+            EmployeeID INT PRIMARY KEY,
+            FirstName VARCHAR(50),
+            LastName VARCHAR(50),
+            DateOfBirth DATE,
+            Department VARCHAR(50)
+        );
+
+    -- Task 2:
+        CREATE TABLE Orders1 (
+            OrderID INT PRIMARY KEY,
+            OrderDate DATE,
+            CustomerID INT,
+            Amount DECIMAL(10, 2)
+        );
+
+2. Inserting Data into a Table
+    -- Task 3:
+        INSERT INTO Employees (EmployeeID, FirstName, LastName, DateOfBirth, Department)
+        VALUES (1, 'Alice', 'Johnson', '1990-01-15', 'HR');
+
+    -- Task 4:
+        INSERT INTO Orders1 (OrderID, OrderDate, CustomerID, Amount)
+        VALUES 
+        (1, '2024-09-01', 101, 250.50),
+        (2, '2024-09-02', 102, 100.00),
+        (3, '2024-09-03', 103, 75.75),
+        (4, '2024-09-04', 104, 150.00),
+        (5, '2024-09-05', 105, 200.25);
+ 
+3. Selecting Data from a Table
+    Select all columns:
+    --Task 5:
+        SELECT * FROM Employees;
+    
+    --Task 6:
+        SELECT * FROM Orders1;
+
+    Select specific columns:
+    --Task 7:
+        SELECT FirstName, LastName FROM Employees;
+
+    --Task 8:
+        SELECT OrderID, Amount FROM Orders1;
+
+4. Updating Data in a Table
+    --Task 9:
+        UPDATE Employees
+        SET Department = 'Finance'
+        WHERE EmployeeID = 1;
+
+    --Task 10:
+        UPDATE Orders1
+        SET Amount = 500.00
+        WHERE OrderID = 2;
+
+5. Deleting Data from a Table
+    --Task 11:
+        DELETE FROM Employees
+        WHERE EmployeeID = 1;
+
+    --Task 12:
+        DELETE FROM Orders1
+        WHERE Amount < 100;
+
+6. Filtering Data with WHERE Clause
+    --Task 13:
+        SELECT * FROM Employees
+        WHERE Department = 'HR';
+    
+    --Task 14:
+        SELECT * FROM Orders1
+        WHERE Amount > 300;
+    
+7. Using AND / OR in Queries
+    Using AND:
+    --Task 15:
+        SELECT * FROM Employees
+        WHERE Department = 'HR' AND DateOfBirth > '1990-01-01';
+
+    --Task 16:
+        SELECT * FROM Orders1
+        WHERE Amount > 300 AND OrderDate < '2023-01-01';
+
+    Using OR:
+    --Task 17:
+        SELECT * FROM Employees
+        WHERE Department = 'HR' OR Department = 'Finance';
+
+    --Task 18:
+        SELECT * FROM Orders1
+        WHERE Amount < 100 OR OrderDate > '2023-01-01';
+
+8. Sorting Results with ORDER BY
+    --Task 19:
+        SELECT * FROM Employees
+        ORDER BY LastName ASC;
+    
+    --Task 20:
+        SELECT * FROM Orders1
+        ORDER BY Amount DESC;
+    
+9. Using Aggregate Functions
+    Counting rows:
+    --Task 21:
+        SELECT COUNT(*) AS NumberOfEmployees
+        FROM Employees;
+
+    --Task 22:
+        SELECT COUNT(*) AS NumberOfOrders
+        FROM Orders1;
+
+    Finding the average age:
+    --Task 23:
+        SELECT AVG(Amount) AS AverageAmount
+        FROM Orders1;
+
+    --Task 24:
+        SELECT AVG(YEAR(CURDATE()) - YEAR(DateOfBirth)) AS AverageAge
+        FROM Employees;
+
+10. Grouping Data with GROUP BY
+    --Task 25:
+        SELECT Department, COUNT(*) AS NumberOfEmployees
+        FROM Employees
+        GROUP BY Department;
+
+    --Task 26:
+        SELECT CustomerID, SUM(Amount) AS TotalAmount
+        FROM Orders1
+        GROUP BY CustomerID;
+
+11. Using HAVING Clause
+    --Task 27:
+        SELECT Department, COUNT(*) AS NumberOfEmployees
+        FROM Employees
+        GROUP BY Department
+        HAVING COUNT(*) > 5;
+
+    --Task 28:
+        SELECT CustomerID, SUM(Amount) AS TotalAmount
+        FROM Orders1
+        GROUP BY CustomerID
+        HAVING SUM(Amount) > 1000;
+
+12. Joining Tables
+    --Task 29:
+        SELECT e.FirstName, e.LastName, o.Amount
+        FROM Employees e
+        INNER JOIN Orders1 o ON e.EmployeeID = o.CustomerID;
+
+    --Task 30:
+        SELECT e.FirstName, e.LastName, o.Amount
+        FROM Employees e
+        LEFT JOIN Orders1 o ON e.EmployeeID = o.CustomerID;
+    
